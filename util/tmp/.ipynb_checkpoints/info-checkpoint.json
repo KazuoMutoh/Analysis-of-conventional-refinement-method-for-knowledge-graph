@@ -1,0 +1,7 @@
+{
+    "int": 1,
+    "saved_datetime": "2024-06-05 04:20:58",
+    "float": 2.5,
+    "str": "hoge",
+    "list": "tmp/list.pt"
+}
