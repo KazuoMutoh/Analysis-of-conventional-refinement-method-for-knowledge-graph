@@ -11,5 +11,11 @@ Those modules are used in this project. So you have to install those moduels bef
 + Pystow: 0.4.9
 + Pykeen: 1.10.0
 
+## 以下のnotebookから構成される
+1. 知識グラフ埋込モデルの作成
+2. 誤りを含む知識グラフの作成
+3. 1の知識グラフ埋込モデルを用いた正常な知識グラフと誤りを含む知識グラフに対するスコアの計算
+4. 上記のスコアの分析
+
 ## References
 [1] Dong, Junnan, et al. "Active ensemble learning for knowledge graph error detection." Proceedings of the Sixteenth ACM International Conference on Web Search and Data Mining. 2023[[Link](https://www.researchgate.net/profile/Daochen-Zha-2/publication/368839233_Active_Ensemble_Learning_for_Knowledge_Graph_Error_Detection/links/641d44e066f8522c38ccfd26/Active-Ensemble-Learning-for-Knowledge-Graph-Error-Detection.pdf)]
