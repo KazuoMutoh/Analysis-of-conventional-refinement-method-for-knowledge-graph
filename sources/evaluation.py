@@ -92,12 +92,14 @@ class Evaluator:
                 df = _dict_false_triples['dataframe']
                 false_indices = np.array(df[df['is-error']==True].index)
                 scores = trained_model.score_hrt(_dict_false_triples['triples_factory'].mapped_triples).cpu().detach().numpy().flatten()
+                df['scores'] = scores
                 dict_tnr = self._calculate_true_negative_ratio(scores,false_indices,top=[0.01,0.03,0.05,0.1])
                 dict_pr_curve = self._calculate_precision_recall_curve(scores,false_indices)
                 dict_evaluation_results[model_random_seed][data_random_seed]['true_negative_ratio'] = dict_tnr
                 dict_evaluation_results[model_random_seed][data_random_seed]['precision_recall_curve'] = dict_pr_curve
                 dict_evaluation_results[model_random_seed][data_random_seed]['model_info'] =\
                       self._get_hits_at_k(kge.get(random_seeds=model_random_seed,selection='model_info'))
+                dict_evaluation_results[model_random_seed][data_random_seed]['dataframe'] = df
 
         return dict_evaluation_results
                 
@@ -210,8 +212,7 @@ if __name__ == "__main__":
     # Learn the knowledge graph embeddings
     kg_embedding.train(dict_args, random_seeds)
     """
-
-
+    
     kg_embedding = KnowledgeGraphEmbedding(dir_save="../models/20240812/test")
 
     # Instantiate the KnowledgeGraph class
@@ -238,4 +239,8 @@ if __name__ == "__main__":
             print(f"True Negative Ratio: {data_results['true_negative_ratio']}")
             print(f"Precision-Recall Curve AUC: {data_results['precision_recall_curve']['auc']}")
             print(f"model-info:{data_results['model_info']}")
+            print(f"dataframe:{data_results['dataframe']}")
+            #data_results['dataframe'].to_excel('df_result.xlsx')
+            df = data_results['dataframe']
+            print(df.sort_values('scores').head(20))
         print()
