@@ -212,7 +212,7 @@ if __name__ == "__main__":
     # Learn the knowledge graph embeddings
     kg_embedding.train(dict_args, random_seeds)
     """
-    
+
     kg_embedding = KnowledgeGraphEmbedding(dir_save="../models/20240812/test")
 
     # Instantiate the KnowledgeGraph class
@@ -240,7 +240,6 @@ if __name__ == "__main__":
             print(f"Precision-Recall Curve AUC: {data_results['precision_recall_curve']['auc']}")
             print(f"model-info:{data_results['model_info']}")
             print(f"dataframe:{data_results['dataframe']}")
-            #data_results['dataframe'].to_excel('df_result.xlsx')
             df = data_results['dataframe']
             print(df.sort_values('scores').head(20))
         print()
