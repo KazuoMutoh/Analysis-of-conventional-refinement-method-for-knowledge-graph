@@ -1,0 +1,8 @@
+{
+    "description": "false triples",
+    "saved_datetime": "2024-08-12 17:18:12",
+    "false_ratio": 0.1,
+    "random_seeds": "test/random_seeds.pt",
+    "dataset_name": "fb15k237",
+    "dict_false_triples": "test/dict_false_triples.pt"
+}
