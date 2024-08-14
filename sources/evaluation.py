@@ -97,8 +97,9 @@ class Evaluator:
                 dict_pr_curve = self._calculate_precision_recall_curve(scores,false_indices)
                 dict_evaluation_results[model_random_seed][data_random_seed]['true_negative_ratio'] = dict_tnr
                 dict_evaluation_results[model_random_seed][data_random_seed]['precision_recall_curve'] = dict_pr_curve
-                dict_evaluation_results[model_random_seed][data_random_seed]['model_info'] =\
-                      self._get_hits_at_k(kge.get(random_seeds=model_random_seed,selection='model_info'))
+                dict_evaluation_results[model_random_seed][data_random_seed]['model_info'] ={}
+                dict_evaluation_results[model_random_seed][data_random_seed]['model_info']['hits@k'] = \
+                      self._get_hits_at_k(list(kge.get(random_seeds=model_random_seed,selection='model_info').values())[0])
                 dict_evaluation_results[model_random_seed][data_random_seed]['dataframe'] = df
 
         return dict_evaluation_results
@@ -114,14 +115,11 @@ class Evaluator:
         Returns:
             dict_hits_at_k (dict): A dictionary containing the hits@k metric for each seed.
         """
+
         dict_hits_at_k = {}
-        
-        for seed, _dict_model_info in dict_model_info.items():
-            dict_hits_at_k[seed] = {}
-            
-            for i in [1,3,5,10]:
-                dict_hits_at_k[seed][i] = _dict_model_info['metrics']['both']['realistic'][f'hits_at_{i}']
-        
+        for i in [1,3,5,10]:
+            dict_hits_at_k[i] = dict_model_info['metrics']['both']['realistic'][f'hits_at_{i}']
+    
         return dict_hits_at_k
     
     def _calculate_true_negative_ratio(self, scores:np.array, false_indices:np.array, top=[0.01]) -> float:
@@ -137,8 +135,12 @@ class Evaluator:
             true_negative_ratio (float): The true negative ratio.
         """
         # Sort the scores in descending order
-        sorted_scores = np.sort(scores)[::-1]
-        
+        #sorted_scores = np.sort(scores)[::-1]
+        sorted_scores = np.sort(scores)
+
+        # Debug write for sorted_scores
+        print("Sorted Scores:", sorted_scores)
+
         dict_true_negative_ratio = {}
         for t in top:
             # Calculate the threshold for true negatives
@@ -148,10 +150,12 @@ class Evaluator:
             num_false_below_threshold = np.sum(scores[false_indices] < threshold)
             
             # Calculate the true negative ratio
-            true_negative_ratio = num_false_below_threshold / len(false_indices)
+            true_negative_ratio = num_false_below_threshold / int(len(sorted_scores) * t)
 
-            dict_true_negative_ratio[t] = true_negative_ratio
-        
+            dict_true_negative_ratio[t] = {}
+            dict_true_negative_ratio[t]['value'] = true_negative_ratio
+            dict_true_negative_ratio[t]['threshold'] = threshold
+            
         return dict_true_negative_ratio
     
     def _calculate_precision_recall_curve(self, scores:np.array, false_indices:np.array) -> Dict:
